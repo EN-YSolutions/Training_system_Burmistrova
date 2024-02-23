@@ -14,6 +14,8 @@ public class Enter : MonoBehaviour
     private string username;
     public static string password;
 
+    public static string UserID;
+
     public void GetData()
     {
         username = user_username.text;
@@ -43,7 +45,10 @@ public class Enter : MonoBehaviour
                         if(name == username && pw == password)
                         {
                             errorlog.text = "";
+                            UserID = reader[0].ToString();
+                            Debug.Log(UserID);
                             SceneManager.LoadScene("Menu");
+                            break;
                         }
                         else
                         {

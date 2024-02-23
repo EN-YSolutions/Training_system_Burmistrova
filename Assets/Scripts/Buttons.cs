@@ -16,14 +16,14 @@ public class Buttons : MonoBehaviour
         SceneManager.LoadScene("CourseChoice");
     }
 
-    public void Continue()
+    public void History()
     {
-        SceneManager.LoadScene("CourseChoice");
+        SceneManager.LoadScene("GameHistory");
     }
 
     public void Settings()
     {
-        SceneManager.LoadScene("CourseChoice");
+        SceneManager.LoadScene("Settings");
     }
 
     public void Exit()
@@ -38,6 +38,6 @@ public class Buttons : MonoBehaviour
 
     public void ToLevelTwo()
     {
-        SceneManager.LoadScene("LevelOne");
+        //SceneManager.LoadScene("LevelOne");
     }
 }
