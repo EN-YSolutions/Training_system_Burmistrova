@@ -21,11 +21,6 @@ public class Buttons : MonoBehaviour
         SceneManager.LoadScene("GameHistory");
     }
 
-    public void Settings()
-    {
-        SceneManager.LoadScene("Settings");
-    }
-
     public void Exit()
     {
         Application.Quit();
@@ -38,6 +33,6 @@ public class Buttons : MonoBehaviour
 
     public void ToLevelTwo()
     {
-        //SceneManager.LoadScene("LevelOne");
+        //SceneManager.LoadScene("LevelTwo");
     }
 }

@@ -17,14 +17,11 @@ public class Questions : MonoBehaviour
     public List<string> qs;
     public List<string> ans;
 
-    private static string connectionString = "Server=localhost;Port=5432;Database=gameSQL;User Id=postgres;Password=admin;";
-    public NpgsqlConnection connection;
-
     public void GetQuestions()
     {
         qs = new List<string>();
         string selectQuery = "SELECT question FROM questions";
-        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, connection))
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
             using (NpgsqlDataReader reader = command.ExecuteReader())
             {
@@ -39,7 +36,7 @@ public class Questions : MonoBehaviour
     public void GetAnswers()
     {
         string selectQuery = "SELECT answer FROM questions";
-        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, connection))
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
             using (NpgsqlDataReader reader = command.ExecuteReader())
             {
@@ -53,7 +50,8 @@ public class Questions : MonoBehaviour
 
     public void Ask()
     {
-        if(qs.Count <= 0)
+        user_answer.text = "";
+        if (qs.Count <= 0)
         {
             QWindow.SetActive(false);
         }
@@ -66,9 +64,6 @@ public class Questions : MonoBehaviour
 
     void Start()
     {
-        connection = new NpgsqlConnection(connectionString);
-        connection.Open();
-
         GetQuestions();
         GetAnswers();
         Ask();
@@ -85,7 +80,6 @@ public class Questions : MonoBehaviour
         if(answer == cAnswer)
         {
             CharControl.points += 10;
-            //Ask();
         }
         else
         {
@@ -94,13 +88,13 @@ public class Questions : MonoBehaviour
             {
                 QWindow.SetActive(false);
                 SceneManager.LoadScene("LevelOne");
-                CharControl.points = 0;
             }
         }
 
         if(qs.Count <= 0)
         {
             QWindow.SetActive(false);
+            Time.timeScale = 1f;
         }
         else
         {

@@ -35,6 +35,7 @@ public class CharControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        points = 0;
     }
 
     void Update()

@@ -11,6 +11,7 @@ public class QuestionWindow : MonoBehaviour
         if (other.name == "Player")
         {
             QWindow.SetActive(true);
+            Time.timeScale = 0f;
             Destroy(gameObject);
         }
     }

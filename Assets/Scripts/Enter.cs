@@ -22,45 +22,33 @@ public class Enter : MonoBehaviour
         password = user_password.text;
     }
 
-    private static string connectionString = "Server=localhost;Port=5432;Database=gameSQL;User Id=postgres;Password=admin;";
-    public NpgsqlConnection connection;
-
     public void Autorize()
     {
         GetData();
-        connection = new NpgsqlConnection(connectionString);
-        try
+        string name, pw;
+        string selectQuery = "SELECT * FROM users";
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
-            connection.Open();
-            string name, pw;
-            string selectQuery = "SELECT * FROM users";
-            using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, connection))
+            using (NpgsqlDataReader reader = command.ExecuteReader())
             {
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    name = reader.GetString(1);
+                    pw = reader.GetString(2);
+                    if (name == username && pw == password)
                     {
-                        name = reader.GetString(1);
-                        pw = reader.GetString(2);
-                        if(name == username && pw == password)
-                        {
-                            errorlog.text = "";
-                            UserID = reader[0].ToString();
-                            Debug.Log(UserID);
-                            SceneManager.LoadScene("Menu");
-                            break;
-                        }
-                        else
-                        {
-                            errorlog.text = "Ошибка! Неправильное имя или пароль";
-                        }
+                        errorlog.text = "";
+                        UserID = reader[0].ToString();
+                        Debug.Log(UserID);
+                        SceneManager.LoadScene("Menu");
+                        break;
+                    }
+                    else
+                    {
+                        errorlog.text = "Ошибка! Неправильное имя или пароль";
                     }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Debug.Log(ex.ToString());
         }
     }
 }

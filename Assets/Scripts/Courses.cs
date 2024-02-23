@@ -12,43 +12,31 @@ public class Courses : MonoBehaviour
     public Text title2;
     public Text desc2;
 
-    private static string connectionString = "Server=localhost;Port=5432;Database=gameSQL;User Id=postgres;Password=admin;";
-    public NpgsqlConnection connection;
-
     void Start()
     {
-        connection = new NpgsqlConnection(connectionString);
-        try
+        string selectQuery = "SELECT * FROM courses";
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
-            connection.Open();
-            string selectQuery = "SELECT * FROM courses";
-            using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, connection))
+            using (NpgsqlDataReader reader = command.ExecuteReader())
             {
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        title1.text = reader.GetString(1);
-                        desc1.text = reader.GetString(2);
-                        break;
-                    }
-                }
-            }
-            using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, connection))
-            {
-                using (NpgsqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        title2.text = reader.GetString(1);
-                        desc2.text = reader.GetString(2);
-                    }
+                    title1.text = reader.GetString(1);
+                    desc1.text = reader.GetString(2);
+                    break;
                 }
             }
         }
-        catch (Exception ex)
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
-            Debug.Log(ex.ToString());
+            using (NpgsqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    title2.text = reader.GetString(1);
+                    desc2.text = reader.GetString(2);
+                }
+            }
         }
     }
 }
