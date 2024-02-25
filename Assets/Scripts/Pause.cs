@@ -5,6 +5,7 @@ using UnityEngine;
 public class Pause : MonoBehaviour
 {
     public bool PauseGame;
+    public GameObject theoryWin;
     public GameObject pauseGameMenu;
 
     void Start()
@@ -14,7 +15,7 @@ public class Pause : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
             if(PauseGame)
             {
@@ -30,8 +31,19 @@ public class Pause : MonoBehaviour
     public void Resume()
     {
         pauseGameMenu.SetActive(false);
+        theoryWin.SetActive(false);
         Time.timeScale = 1f;
         PauseGame = false;
+    }
+
+    public void Theory()
+    {
+        theoryWin.SetActive(true);
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            theoryWin.SetActive(false);
+            PauseG();
+        }
     }
 
     public void PauseG()

@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameHistory.unity
     guid: c21c6b866d186d6459be2780e7135a09
+  - enabled: 1
+    path: Assets/Scenes/MistakesHistory.unity
+    guid: b0470f1eb8190d24bab3570d2b9df886
   m_configObjects: {}

@@ -26,6 +26,12 @@ public class SettingsControl : MonoBehaviour
         {
             command.ExecuteNonQuery();
         }
+
+        newQuery = "DELETE FROM mistakes WHERE user_id = '" + Enter.UserID + "'";
+        using (NpgsqlCommand command = new NpgsqlCommand(newQuery, DatabaseConnector.connection))
+        {
+            command.ExecuteNonQuery();
+        }
     }
 
     public void LeaveAccount()

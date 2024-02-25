@@ -21,6 +21,11 @@ public class Buttons : MonoBehaviour
         SceneManager.LoadScene("GameHistory");
     }
 
+    public void MistakesHistory()
+    {
+        SceneManager.LoadScene("MistakesHistory");
+    }
+
     public void Exit()
     {
         Application.Quit();

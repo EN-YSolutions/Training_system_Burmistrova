@@ -16,6 +16,7 @@ public class Questions : MonoBehaviour
     public string cAnswer;
     public List<string> qs;
     public List<string> ans;
+    public string qID;
 
     public void GetQuestions()
     {
@@ -84,6 +85,26 @@ public class Questions : MonoBehaviour
         else
         {
             CharControl.healthPoint -= 1;
+
+            string selectQuery = "SELECT * FROM questions WHERE question = '"+question.text+"'";
+            using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
+            {
+                using (NpgsqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        qID = reader[0].ToString();
+                        break;
+                    }
+                }
+            }
+
+            string newQuery = "INSERT INTO mistakes(game_date, user_id, question_id, user_answer) VALUES('"+GameDate.gamedate+"', '"+Enter.UserID+"', '" +qID+"', '"+answer+"')";
+            using (NpgsqlCommand command = new NpgsqlCommand(newQuery, DatabaseConnector.connection))
+            {
+                command.ExecuteNonQuery();
+            }
+
             if (CharControl.healthPoint <= 0)
             {
                 QWindow.SetActive(false);
