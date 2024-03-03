@@ -38,6 +38,6 @@ public class Buttons : MonoBehaviour
 
     public void ToLevelTwo()
     {
-        //SceneManager.LoadScene("LevelTwo");
+        SceneManager.LoadScene("LevelTwo");
     }
 }

@@ -13,7 +13,6 @@ public class GetMistakesHistory : MonoBehaviour
 
     private string date;
     private List<string> qid;
-    private int i = 0;
 
     void Start()
     {
@@ -35,9 +34,9 @@ public class GetMistakesHistory : MonoBehaviour
             }
         }
 
-        while(i < 4)
+        while(qid.Count > 0)
         {
-            selectQuery = "SELECT * FROM questions WHERE id = '" + qid[i] + "'";
+            selectQuery = "SELECT * FROM questions WHERE id = '" + qid[0] + "'";
             using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
             {
                 using (NpgsqlDataReader reader = command.ExecuteReader())
@@ -46,7 +45,7 @@ public class GetMistakesHistory : MonoBehaviour
                     {
                         question.text += date + " " + reader[2].ToString() + "\n";
                         cAns.text += reader[3].ToString() + "\n";
-                        i++;
+                        qid.RemoveAt(0);
                     }
                 }
             }

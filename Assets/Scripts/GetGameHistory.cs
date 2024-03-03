@@ -14,7 +14,7 @@ public class GetGameHistory : MonoBehaviour
 
     void Start()
     {
-        string selectQuery = "SELECT * FROM previous_games WHERE user_id = '" + Enter.UserID + "' AND course_id = 'ff28c433-601a-4b6e-ac8b-ea505bec4e7d'";
+        string selectQuery = "SELECT * FROM previous_games WHERE user_id = '" + Enter.UserID + "' AND course_id = '302cb1a0-ac5a-4dfc-8f29-376351450789'";
         using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
             using (NpgsqlDataReader reader = command.ExecuteReader())
@@ -35,7 +35,7 @@ public class GetGameHistory : MonoBehaviour
         {
             result.text = "";
             i = 1;
-            string selectQuery = "SELECT * FROM previous_games WHERE user_id = '"+ Enter.UserID + "' AND course_id = 'ff28c433-601a-4b6e-ac8b-ea505bec4e7d'";
+            string selectQuery = "SELECT * FROM previous_games WHERE user_id = '"+ Enter.UserID + "' AND course_id = '302cb1a0-ac5a-4dfc-8f29-376351450789'";
             using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
             {
                 using (NpgsqlDataReader reader = command.ExecuteReader())
@@ -53,7 +53,7 @@ public class GetGameHistory : MonoBehaviour
         {
             result.text = "";
             i = 1;
-            string selectQuery = "SELECT * FROM previous_games WHERE user_id = '"+ Enter.UserID + "' AND course_id = 'c3214c5b-51b8-44ce-8137-1c056a3aa173'";
+            string selectQuery = "SELECT * FROM previous_games WHERE user_id = '"+ Enter.UserID + "' AND course_id = '13976654-8fb7-4c9b-9a1d-e585c5ef7e21'";
             using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
             {
                 using (NpgsqlDataReader reader = command.ExecuteReader())

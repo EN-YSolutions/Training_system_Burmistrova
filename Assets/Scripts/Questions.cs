@@ -9,26 +9,58 @@ using UnityEngine.SceneManagement;
 public class Questions : MonoBehaviour
 {
     public GameObject QWindow;
+    public GameObject ExpWindow;
+    public Text exp;
     public Text question;
     public Text score;
     public InputField user_answer;
-    public string answer;
-    public string cAnswer;
-    public List<string> qs;
-    public List<string> ans;
-    public string qID;
+    private string answer;
+    private string cAnswer;
+    private List<string> qs;
+    private List<string> exps;
+    private List<string> ans;
+    private string qID;
 
-    public void GetQuestions()
+    private string currentCourseId;
+    private string sceneName;
+
+    public void GetId()
     {
-        qs = new List<string>();
-        string selectQuery = "SELECT question FROM questions";
+        string selectQuery = "SELECT * FROM courses";
         using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
             using (NpgsqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    qs.Add(reader.GetString(0));
+                    if(sceneName == "LevelOne")
+                    {
+                        currentCourseId = reader[0].ToString();
+                        break;
+                    }
+                    else if(sceneName == "LevelTwo")
+                    {
+                        currentCourseId = reader[0].ToString();
+                    }
+                }
+            }
+        }
+        Debug.Log(currentCourseId);
+    }
+
+    public void GetQuestions()
+    {
+        qs = new List<string>();
+        exps = new List<string>();
+        string selectQuery = "SELECT * FROM questions WHERE course_id = '"+currentCourseId+"'";
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
+        {
+            using (NpgsqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    qs.Add(reader.GetString(2));
+                    exps.Add(reader.GetString(4));
                 }
             }
         }
@@ -36,7 +68,8 @@ public class Questions : MonoBehaviour
 
     public void GetAnswers()
     {
-        string selectQuery = "SELECT answer FROM questions";
+        ans = new List<string>();
+        string selectQuery = "SELECT answer FROM questions WHERE course_id = '"+currentCourseId+"'";
         using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
         {
             using (NpgsqlDataReader reader = command.ExecuteReader())
@@ -59,12 +92,18 @@ public class Questions : MonoBehaviour
         int ind = UnityEngine.Random.Range(0, qs.Count);
         question.text = qs[ind];
         qs.RemoveAt(ind);
+        exp.text = exps[ind];
+        exps.RemoveAt(ind);
         cAnswer = ans[ind];
         ans.RemoveAt(ind); 
     }
 
     void Start()
     {
+        ExpWindow.SetActive(false);
+        var currentScene = SceneManager.GetActiveScene();
+        sceneName = currentScene.name;
+        GetId();
         GetQuestions();
         GetAnswers();
         Ask();
@@ -81,38 +120,53 @@ public class Questions : MonoBehaviour
         if(answer == cAnswer)
         {
             CharControl.points += 10;
+            if (qs.Count <= 0)
+            {
+                QWindow.SetActive(false);
+                Time.timeScale = 1f;
+            }
+            else
+            {
+                Ask();
+            }
         }
         else
         {
+            ExpWindow.SetActive(true);
             CharControl.healthPoint -= 1;
+        }
+    }
 
-            string selectQuery = "SELECT * FROM questions WHERE question = '"+question.text+"'";
-            using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
+    public void Continue()
+    {
+        ExpWindow.SetActive(false);
+
+        string selectQuery = "SELECT * FROM questions WHERE question = '" + question.text + "'";
+        using (NpgsqlCommand command = new NpgsqlCommand(selectQuery, DatabaseConnector.connection))
+        {
+            using (NpgsqlDataReader reader = command.ExecuteReader())
             {
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        qID = reader[0].ToString();
-                        break;
-                    }
+                    qID = reader[0].ToString();
+                    break;
                 }
-            }
-
-            string newQuery = "INSERT INTO mistakes(game_date, user_id, question_id, user_answer) VALUES('"+GameDate.gamedate+"', '"+Enter.UserID+"', '" +qID+"', '"+answer+"')";
-            using (NpgsqlCommand command = new NpgsqlCommand(newQuery, DatabaseConnector.connection))
-            {
-                command.ExecuteNonQuery();
-            }
-
-            if (CharControl.healthPoint <= 0)
-            {
-                QWindow.SetActive(false);
-                SceneManager.LoadScene("LevelOne");
             }
         }
 
-        if(qs.Count <= 0)
+        string newQuery = "INSERT INTO mistakes(game_date, user_id, question_id, user_answer) VALUES('" + GameDate.gamedate + "', '" + Enter.UserID + "', '" + qID + "', '" + answer + "')";
+        using (NpgsqlCommand command = new NpgsqlCommand(newQuery, DatabaseConnector.connection))
+        {
+            command.ExecuteNonQuery();
+        }
+
+        if (CharControl.healthPoint <= 0)
+        {
+            QWindow.SetActive(false);
+            SceneManager.LoadScene(sceneName);
+        }
+
+        if (qs.Count <= 0)
         {
             QWindow.SetActive(false);
             Time.timeScale = 1f;

@@ -27,7 +27,7 @@ public class CharControl : MonoBehaviour
         if(healthPoint <= 0)
         {
             Destroy(gameObject);
-            SceneManager.LoadScene("LevelOne");
+            SceneManager.LoadScene(Exit.sceneName);
         }
     }
 
