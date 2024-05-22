@@ -12,11 +12,17 @@ public class SettingsControl : MonoBehaviour
     void Start()
     {
         setWin.SetActive(false);
+        //Проверка на права админа
     }
 
     public void SettingsButton()
     {
         setWin.SetActive(true);
+    }
+
+    public void OpenAP()
+    {
+        SceneManager.LoadScene("AdminPanel");
     }
 
     public void DeleteHistory()
